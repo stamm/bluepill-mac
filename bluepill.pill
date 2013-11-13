@@ -1,0 +1,12 @@
+Bluepill.application("necessary") do |app|
+  app.process("postgres") do |process|
+    process.start_command = "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+    # change in file /usr/local/var/postgres/postgresql.conf
+    # external_pid_file = '/usr/local/var/run/postgresql.pid'
+    process.pid_file = "/usr/local/var/run/postgresql.pid"
+    process.start_grace_time = 15.seconds
+    process.stop_grace_time = 15.seconds
+    process.restart_grace_time = 15.seconds
+    process.stop_command = 'pg_ctl -D /usr/local/var/postgres stop'
+  end
+end
