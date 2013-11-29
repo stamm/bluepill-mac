@@ -1,21 +1,23 @@
-Bluepill.application("necessary") do |app|
-  app.uid = ENV['USER']
-  # app.gid = "staff"
+Bluepill.application("necessary", log_file: "bluepill.log") do |app|
+  app.uid = ENV['SUDO_USER']
+#  app.gid = "staff"
   app.process("postgres") do |process|
     process.start_command = "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+    process.stop_command = 'pg_ctl -D /usr/local/var/postgres -m fast stop'
     # change in file /usr/local/var/postgres/postgresql.conf
     # external_pid_file = '/usr/local/var/run/postgresql.pid'
     process.pid_file = "/usr/local/var/run/postgresql.pid"
+    process.stdout = process.stderr = "postgresql.log"
     process.start_grace_time = 15.seconds
     process.stop_grace_time = 15.seconds
     process.restart_grace_time = 15.seconds
-    process.stop_command = 'pg_ctl -D /usr/local/var/postgres -m fast stop'
   end
 
 
   app.process("redis") do |process|
     process.start_command = "redis-server /usr/local/etc/redis.conf"
-    # process.daemonize = false
+    # change in file /usr/local/etc/redis.conf
+    # daemonize yes
     process.pid_file = "/usr/local/var/run/redis.pid"
     process.start_grace_time = 3.seconds
     process.stop_grace_time = 5.seconds

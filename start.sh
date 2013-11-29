@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo bluepill load bluepill.pill
+sudo bundle exec bluepill load bluepill.pill
